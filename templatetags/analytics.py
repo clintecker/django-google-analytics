@@ -38,11 +38,14 @@ class AnalyticsNode(template.Node):
             code = self.code
         else:
             return ''
-
-        t = loader.get_template('google_analytics/analytics_template.html')
-        c = Context({
-            'analytics_code': code,
-        })
-        return t.render(c)
+        
+        if code.strip() != '':
+            t = loader.get_template('google_analytics/analytics_template.html')
+            c = Context({
+                'analytics_code': code,
+            })
+            return t.render(c)
+        else:
+            return ''
         
 register.tag('analytics', do_get_analytics)
