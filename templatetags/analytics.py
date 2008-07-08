@@ -33,7 +33,10 @@ class AnalyticsNode(template.Node):
     def render(self, context):
         content = ''
         if self.site:
-            code = self.site.analytics_set.all()[0].analytics_code
+            try:
+                code = self.site.analytics_set.all()[0].analytics_code
+            except AttributeError:
+                return ''
         elif self.code:
             code = self.code
         else:

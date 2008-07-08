@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.sites.models import Site
 
 if getattr(settings, 'GOOGLE_ANALYTICS_MODEL', False):
