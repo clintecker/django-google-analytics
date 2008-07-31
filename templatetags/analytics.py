@@ -16,7 +16,6 @@ def do_get_analytics(parser, token):
         code = None
    
     if not code:
-        print "No code, grabbing from sites"
         current_site = Site.objects.get_current()
     else:
         if not (code[0] == code[-1] and code[0] in ('"', "'")):
@@ -33,9 +32,10 @@ class AnalyticsNode(template.Node):
     def render(self, context):
         content = ''
         if self.site:
-            try:
-                code = self.site.analytics_set.all()[0].analytics_code
-            except AttributeError:
+            code_set = self.site.analytics_set.all()
+            if code_set:
+                code = code_set[0].analytics_code
+            else:
                 return ''
         elif self.code:
             code = self.code
