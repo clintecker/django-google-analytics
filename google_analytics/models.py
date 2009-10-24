@@ -8,3 +8,6 @@ class Analytics(models.Model):
 
     def __unicode__(self):
         return u"%s" % (self.analytics_code)
+    
+    class Meta:
+        verbose_name_plural = "Analytics"
