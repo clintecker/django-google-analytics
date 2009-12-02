@@ -15,6 +15,7 @@ def do_get_analytics(parser, token):
     except ValueError:
         code = None
    
+    template_name = 'google_analytics/%s_template.html' % tag_name
     if not code:
         current_site = Site.objects.get_current()
     else:
@@ -22,12 +23,13 @@ def do_get_analytics(parser, token):
             raise template.TemplateSyntaxError, "%r tag's argument should be in quotes" % tag_name
         code = code[1:-1]
         current_site = None
-    return AnalyticsNode(current_site, code)
+    return AnalyticsNode(current_site, code, template_name)
     
 class AnalyticsNode(template.Node):
-    def __init__(self, site=None, code=None):
+    def __init__(self, site=None, code=None, template_name='google_analytics/analytics_template.html'):
         self.site = site
         self.code = code
+        self.template_name = template_name
         
     def render(self, context):
         content = ''
@@ -43,7 +45,7 @@ class AnalyticsNode(template.Node):
             return ''
         
         if code.strip() != '':
-            t = loader.get_template('google_analytics/analytics_template.html')
+            t = loader.get_template(self.template_name)
             c = Context({
                 'analytics_code': code,
             })
@@ -52,3 +54,4 @@ class AnalyticsNode(template.Node):
             return ''
         
 register.tag('analytics', do_get_analytics)
+register.tag('analytics_async', do_get_analytics)

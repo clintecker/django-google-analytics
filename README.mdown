@@ -12,6 +12,7 @@ be able to manage these Google analytics accounts from the Django admin page.
 I also added a mode of operation that excludes the admin interface altogether 
 (you can just use the template tag)
 
+
 ## Two modes of operation ##
 
 ### Administering and associating codes with Django `Sites` framework ###
@@ -30,6 +31,25 @@ I also added a mode of operation that excludes the admin interface altogether
 1. Add the `google_analytics` application to your `INSTALLED_APPS` section of your `settings.py`.
 2. In your base template, usually a `base.html`, insert this tag at the very top: `{% load analytics %}`
 3. In the same template, insert the following code right before the closing body tag: `{% analytics "UA-xxxxxx-x" %}` the `UA-xxxxxx-x` is a unique Google Analytics code for you domain when you sign up for a new account.
+
+
+## Asynchronous Tracking ##
+
+Google's recent asynchronous tracking API is also supported, as of v0.2.  To use it,
+simply call the templatetag `{% analytics_async %}` in the document head instead
+of calling `{% analytics %}` just before the end of the body.  You can also use
+`{% analytics_async "UA-xxxxxx-x" %}` as with the old templatetags.
+
+This is being added as an option rather than a replacement for two reasons:
+
+1. Google recommends the Asynchronous Tracking snippet goes in the <head> tag, while
+   the old snippet goes at the end of the <body> tag, so as not to disrupt page loading.
+   Therefore it is not a drop in replacement in your template
+2. The new snippet is reported to [break sites that have a comment before the head tag](http://www.stevesouders.com/blog/2009/12/01/google-analytics-goes-async/#comment-1171). 
+   Adding the asynchronous tracking to existing code would cause backwards 
+   incompatiblity.
+
+
 
 ## License ##
 
