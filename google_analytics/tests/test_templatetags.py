@@ -1,9 +1,12 @@
 from django.test import TestCase
 from django import template
 
+from django.contrib.sites.models import Site
+
 from google_analytics.templatetags import analytics 
 
 class ParserTest(TestCase):
+
     def setUp(self):
         self.parser = "unused"
         #################################
@@ -14,6 +17,7 @@ class ParserTest(TestCase):
         self.token_noarg = template.Token(template.TOKEN_BLOCK, "test")
         self.token_onearg = template.Token(template.TOKEN_BLOCK, "test 'UA-888888-1'")
         self.token_twoarg = template.Token(template.TOKEN_BLOCK, "test 'UA-888888-1' 'UA-999999-2'")
+        self.site = Site.objects.get_current()
 
     def test_setup(self):
         self.assert_(True)
@@ -36,6 +40,16 @@ class ParserTest(TestCase):
     
     def test_twoarg_node_exception(self):
         self.assertRaises(template.TemplateSyntaxError, analytics.do_get_analytics, self.parser, self.token_twoarg)
+
+    def test_noarg_site(self):
+        """If no access code is provided, the site will be set to the currently active site"""
+        node = analytics.do_get_analytics(self.parser, self.token_noarg)
+        self.assertEqual(node.site, self.site)
+
+    def test_onearg_site(self):
+        """If an access code is provided, the site will not be set"""
+        node = analytics.do_get_analytics(self.parser, self.token_onearg)
+        self.assertEqual(node.site, None)
 
 class NodeTest(TestCase):
     def setUp(self):
