@@ -9,13 +9,17 @@ register = template.Library()
 Analytics = models.get_model('googleanalytics', 'analytics')
 
 def do_get_analytics(parser, token):
-    try:
-        # split_contents() knows not to split quoted strings.
-        tag_name, code = token.split_contents()
-    except ValueError:
-        code = None
-   
+    contents = token.split_contents()
+    tag_name = contents[0]
     template_name = 'google_analytics/%s_template.html' % tag_name
+    if len(contents) == 2:
+        # split_contents() knows not to split quoted strings.
+        code = contents[1]
+    elif len(contents) == 1:
+        code = None
+    else:
+        raise template.TemplateSyntaxError, "%r cannot take more than one argument" % tag_name
+   
     if not code:
         current_site = Site.objects.get_current()
     else:
@@ -23,6 +27,7 @@ def do_get_analytics(parser, token):
             raise template.TemplateSyntaxError, "%r tag's argument should be in quotes" % tag_name
         code = code[1:-1]
         current_site = None
+
     return AnalyticsNode(current_site, code, template_name)
     
 class AnalyticsNode(template.Node):
