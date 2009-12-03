@@ -52,7 +52,7 @@ class NodeTest(TestCase):
         self.assertEqual(self.node_explicit_template.template_name, 'google_analytics/test_template.html')
         
     def test_noarg_code_name(self):
-        self.assertEqual(self.node_noarg.code, '')
+        self.assertEqual(self.node_noarg.code, None)
 
     def test_explicit_code_name(self):
         self.assertEqual(self.node_code.code, 'UA-999999-1')
