@@ -49,6 +49,62 @@ This is being added as an option rather than a replacement for two reasons:
    Adding the asynchronous tracking to existing code would cause backwards 
    incompatiblity.
 
+## Supporting other tracking methods ##
+
+Sometimes, the built-in code snippets are not sufficient for what you want to
+do with Google Analytics.  You might need to use different access methods,
+or to support more complex Google Analytics functionality.  Fortunately, using 
+different code snippets is dead easy, and there are two ways to do it.
+
+
+### Overriding the analytics template ###
+
+The easiest way is to override the `'google_analytics/analytics_template.html'`
+template in a template directory that gets loaded before the one in the 
+`google_analytics` app.  
+
+
+### Registering a new analytics tag ###
+
+You may want to keep the existing snippets around, while adding a new method.
+Perhaps some of your pages need one snippet, but other pages need a different
+one.  In this case all you have to do is register a new tag in your tag 
+library using `do_get_analytics` like so:
+
+    from django import template
+    from google_analytics.templatetags import analytics
+
+    register = template.Library()
+    register.tag('my_analytics', analytics.do_get_analytics)
+    
+Then create a template at `'google_analytics/%(tag_name)s_template.html'`. 
+In this case the template name would be 
+`'google_analytics/my_analytics_template.html'`.  Pass the variable 
+`{{ analytics_code }}` to the template wherever you need it.
+
+The new tag will have all the same properties as the default tag, supporting
+site-based analytics codes, as well as explicitly defined codes.
+
+The best way to do this is to create a tiny app just for this purpose, so 
+you don't have to modify the code in `google_analytics`.  Just put the above
+code in `[app_name]/templatetags/[tag_library_name].py`.  Then put your 
+template in `[app_name]/templates/google_analytics/[template_name]`.  If your 
+app is named `my_analytics_app`, your tag library is named `more_analytics`,
+and your tag is registered as `my_analytics`, the resulting app will have a 
+directory structure like this:
+
+    my_analytics_app/
+    +-- templatetags/
+    |   +-- __init__.py
+    |   \-- more_analytics.py
+    \-- templates/
+         \-- google_analytics/
+             \-- my_analytics_template.html
+         
+Finally, add `'my_analytics_app'` to your `settings.py` file.  Your new tag is 
+ready to go.  To use the tag, put `{% load more_analytics %}` at the head of 
+your template.  You can now access the `{% my_analytics %}` tag the same way 
+you would use `{% analytics %}`.
 
 
 ## License ##
