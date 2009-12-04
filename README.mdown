@@ -101,7 +101,7 @@ directory structure like this:
          \-- google_analytics/
              \-- my_analytics_template.html
          
-Finally, add `'my_analytics_app'` to your `settings.py` file.  Your new tag is 
+Finally, add `'my_analytics_app'` to `INSTALLED_APPS` in your `settings.py` file.  Your new tag is 
 ready to go.  To use the tag, put `{% load more_analytics %}` at the head of 
 your template.  You can now access the `{% my_analytics %}` tag the same way 
 you would use `{% analytics %}`.
