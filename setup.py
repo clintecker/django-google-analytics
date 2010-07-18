@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='google_analytics',
-      version='0.1',
+      version='0.2',
       description='A simple Django application to integrate Google Analytics into your projects',
       author='Clint Ecker',
       author_email='me@clintecker.com',
