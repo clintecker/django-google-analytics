@@ -49,6 +49,13 @@ This is being added as an option rather than a replacement for two reasons:
    Adding the asynchronous tracking to existing code would cause backwards 
    incompatiblity.
 
+## Tracking Page-Load Time ##
+
+Google has added [page-load tracking](http://www.google.com/support/analyticshelp/bin/answer.py?hl=en&answer=1205784&topic=1120718).
+To use this feature add the following to your settings file:
+
+    GOOGLE_ANALYTICS_TRACK_PAGE_LOAD_TIME = True
+
 ## Supporting other tracking methods ##
 
 Sometimes, the built-in code snippets are not sufficient for what you want to
