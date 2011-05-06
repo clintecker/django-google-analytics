@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 from django.db import models
 from django.contrib.sites.models import Site
 
@@ -53,6 +54,9 @@ class AnalyticsNode(template.Node):
             t = loader.get_template(self.template_name)
             c = Context({
                 'analytics_code': code,
+                'track_page_load_time': getattr(settings,
+                                                "GOOGLE_ANALYTICS_TRACK_PAGE_LOAD_TIME",
+                                                False),
             })
             return t.render(c)
         else:
